@@ -21,7 +21,7 @@ import XCTest
   import UIKit // For UIImage extensions.
 #endif
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 final class VertexAIAPITests: XCTestCase {
   func codeSamples() async throws {
     let app = FirebaseApp.app()
@@ -162,7 +162,7 @@ final class VertexAIAPITests: XCTestCase {
   func generateContentResponseAPI() {
     let response = GenerateContentResponse(candidates: [])
 
-    let _: [CandidateResponse] = response.candidates
+    let _: [Candidate] = response.candidates
     let _: PromptFeedback? = response.promptFeedback
 
     // Usage Metadata

@@ -1,4 +1,21 @@
 # 11.4.0
+- [feature] Vertex AI in Firebase is now Generally Available (GA) and can be
+  used in production apps.
+  <br /><br />
+  Use the Vertex AI in Firebase library to call the Vertex AI Gemini API
+  directly from your app. This client library is built specifically for use with
+  Swift apps, offering security options against unauthorized clients as well as
+  integrations with other Firebase services.
+  <br /><br />
+  Note: Vertex AI in Firebase is currently only available in Swift Package
+  Manager and CocoaPods. Stay tuned for the next release for the Zip and
+  Carthage distributions.
+  <br /><br />
+  - If you're new to this library, visit the
+    [getting started guide](http://firebase.google.com/docs/vertex-ai/get-started?platform=ios).
+  - If you used the preview version of the library, visit the
+    [migration guide](https://firebase.google.com/docs/vertex-ai/migrate-to-ga?platform=ios)
+    to learn about some important updates.
 - [changed] **Breaking Change**: The SDK is now Generally Available (GA); both
   new and existing users must perform the
   [Build with Gemini](https://console.firebase.google.com/project/_/genai/)
@@ -50,6 +67,14 @@
 - [changed] **Breaking Change**: The `FunctionCallingConfig` initializer and
   `Mode` enum are now internal; use one of the new type methods `auto()`,
   `any(allowedFunctionNames:)`, or `none()` to create a config. (#13873)
+- [changed] **Breaking Change**: The `CandidateResponse` type is now named
+  `Candidate`. (#13897)
+- [changed] **Breaking Change**: The minimum deployment target for the SDK is
+  now macOS 12.0; all other platform minimums remain the same at iOS 15.0,
+  macCatalyst 15.0, tvOS 15.0, and watchOS 8.0. (#13903)
+- [changed] **Breaking Change**: All of the public properties of
+  `GenerationConfig` are now `internal`; they all remain configurable in the
+  initializer. (#13904)
 - [changed] The default request timeout is now 180 seconds instead of the
   platform-default value of 60 seconds for a `URLRequest`; this timeout may
   still be customized in `RequestOptions`. (#13722)
@@ -72,6 +97,10 @@
   that may be reported when a prompt is blocked. (#13861)
 - [added] Added the `PromptFeedback` property `blockReasonMessage` that *may* be
   provided alongside the `blockReason`. (#13891)
+- [added] Added an optional `publicationDate` property that *may* be provided in
+  `Citation`. (#13893)
+- [added] Added `presencePenalty` and `frequencyPenalty` parameters to
+  `GenerationConfig`. (#13899)
 
 # 11.3.0
 - [added] Added `Decodable` conformance for `FunctionResponse`. (#13606)

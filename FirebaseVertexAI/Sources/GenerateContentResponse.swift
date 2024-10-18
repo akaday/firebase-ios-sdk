@@ -15,9 +15,10 @@
 import Foundation
 
 /// The model's response to a generate content request.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct GenerateContentResponse: Sendable {
   /// Token usage metadata for processing the generate content request.
+  @available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
   public struct UsageMetadata: Sendable {
     /// The number of tokens in the request prompt.
     public let promptTokenCount: Int
@@ -30,7 +31,7 @@ public struct GenerateContentResponse: Sendable {
   }
 
   /// A list of candidate response content, ordered from best to worst.
-  public let candidates: [CandidateResponse]
+  public let candidates: [Candidate]
 
   /// A value containing the safety ratings for the response, or, if the request was blocked, a
   /// reason for blocking the request.
@@ -82,7 +83,7 @@ public struct GenerateContentResponse: Sendable {
   }
 
   /// Initializer for SwiftUI previews or tests.
-  public init(candidates: [CandidateResponse], promptFeedback: PromptFeedback? = nil,
+  public init(candidates: [Candidate], promptFeedback: PromptFeedback? = nil,
               usageMetadata: UsageMetadata? = nil) {
     self.candidates = candidates
     self.promptFeedback = promptFeedback
@@ -92,8 +93,8 @@ public struct GenerateContentResponse: Sendable {
 
 /// A struct representing a possible reply to a content generation prompt. Each content generation
 /// prompt may produce multiple candidate responses.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
-public struct CandidateResponse: Sendable {
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+public struct Candidate: Sendable {
   /// The response's content.
   public let content: ModelContent
 
@@ -118,14 +119,14 @@ public struct CandidateResponse: Sendable {
 }
 
 /// A collection of source attributions for a piece of content.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct CitationMetadata: Sendable {
   /// A list of individual cited sources and the parts of the content to which they apply.
   public let citations: [Citation]
 }
 
 /// A struct describing a source attribution.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct Citation: Sendable {
   /// The inclusive beginning of a sequence in a model response that derives from a cited source.
   public let startIndex: Int
@@ -141,10 +142,15 @@ public struct Citation: Sendable {
 
   /// The license the cited source work is distributed under, if specified.
   public let license: String?
+
+  /// The publication date of the cited source, if available.
+  ///
+  /// > Tip: `DateComponents` can be converted to a `Date` using the `date` computed property.
+  public let publicationDate: DateComponents?
 }
 
 /// A value enumerating possible reasons for a model to terminate a content generation request.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct FinishReason: DecodableProtoEnum, Hashable, Sendable {
   enum Kind: String {
     case stop = "STOP"
@@ -166,8 +172,8 @@ public struct FinishReason: DecodableProtoEnum, Hashable, Sendable {
 
   /// The token generation was stopped because the response was flagged for safety reasons.
   ///
-  /// > NOTE: When streaming, the ``CandidateResponse/content`` will be empty if content filters
-  /// > blocked the output.
+  /// > NOTE: When streaming, the ``Candidate/content`` will be empty if content filters blocked the
+  /// > output.
   public static let safety = FinishReason(kind: .safety)
 
   /// The token generation was stopped because the response was flagged for unauthorized citations.
@@ -199,9 +205,10 @@ public struct FinishReason: DecodableProtoEnum, Hashable, Sendable {
 }
 
 /// A metadata struct containing any feedback the model had on the prompt it was provided.
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 public struct PromptFeedback: Sendable {
   /// A type describing possible reasons to block a prompt.
+  @available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
   public struct BlockReason: DecodableProtoEnum, Hashable, Sendable {
     enum Kind: String {
       case safety = "SAFETY"
@@ -252,7 +259,7 @@ public struct PromptFeedback: Sendable {
 
 // MARK: - Codable Conformances
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 extension GenerateContentResponse: Decodable {
   enum CodingKeys: CodingKey {
     case candidates
@@ -274,7 +281,7 @@ extension GenerateContentResponse: Decodable {
     }
 
     if let candidates = try container.decodeIfPresent(
-      [CandidateResponse].self,
+      [Candidate].self,
       forKey: .candidates
     ) {
       self.candidates = candidates
@@ -286,7 +293,7 @@ extension GenerateContentResponse: Decodable {
   }
 }
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 extension GenerateContentResponse.UsageMetadata: Decodable {
   enum CodingKeys: CodingKey {
     case promptTokenCount
@@ -303,8 +310,8 @@ extension GenerateContentResponse.UsageMetadata: Decodable {
   }
 }
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
-extension CandidateResponse: Decodable {
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+extension Candidate: Decodable {
   enum CodingKeys: CodingKey {
     case content
     case safetyRatings
@@ -352,10 +359,10 @@ extension CandidateResponse: Decodable {
   }
 }
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 extension CitationMetadata: Decodable {}
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 extension Citation: Decodable {
   enum CodingKeys: CodingKey {
     case startIndex
@@ -363,32 +370,51 @@ extension Citation: Decodable {
     case uri
     case title
     case license
+    case publicationDate
   }
 
   public init(from decoder: any Decoder) throws {
     let container = try decoder.container(keyedBy: CodingKeys.self)
     startIndex = try container.decodeIfPresent(Int.self, forKey: .startIndex) ?? 0
     endIndex = try container.decode(Int.self, forKey: .endIndex)
+
     if let uri = try container.decodeIfPresent(String.self, forKey: .uri), !uri.isEmpty {
       self.uri = uri
     } else {
       uri = nil
     }
+
     if let title = try container.decodeIfPresent(String.self, forKey: .title), !title.isEmpty {
       self.title = title
     } else {
       title = nil
     }
+
     if let license = try container.decodeIfPresent(String.self, forKey: .license),
        !license.isEmpty {
       self.license = license
     } else {
       license = nil
     }
+
+    if let publicationProtoDate = try container.decodeIfPresent(
+      ProtoDate.self,
+      forKey: .publicationDate
+    ) {
+      publicationDate = publicationProtoDate.dateComponents
+      if let publicationDate, !publicationDate.isValidDate {
+        VertexLog.warning(
+          code: .decodedInvalidCitationPublicationDate,
+          "Decoded an invalid citation publication date: \(publicationDate)"
+        )
+      }
+    } else {
+      publicationDate = nil
+    }
   }
 }
 
-@available(iOS 15.0, macOS 11.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
+@available(iOS 15.0, macOS 12.0, macCatalyst 15.0, tvOS 15.0, watchOS 8.0, *)
 extension PromptFeedback: Decodable {
   enum CodingKeys: CodingKey {
     case blockReason
